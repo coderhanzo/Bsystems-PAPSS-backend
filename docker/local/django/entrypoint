@@ -20,7 +20,7 @@ try:
         user="${MYSQL_USER}",
         password="${MYSQL_PASSWORD}",
         host="${MYSQL_HOST}",
-        port="${MYSQL_PORT}"
+        port="3306"
     )
 
     if connection.is_connected():

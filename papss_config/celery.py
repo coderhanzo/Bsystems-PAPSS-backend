@@ -6,7 +6,7 @@ from papss_config import settings
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "papss_config.settings")
 
-app = Celery("papss_config")
+app = Celery("papss_config", broker="redis://redis:6379/0")
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.

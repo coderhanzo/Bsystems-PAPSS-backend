@@ -147,7 +147,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-EXCHANGE_RATE_API_KEY = env("EXCHANGE_RATE_API_KEY")
+EXCHANGE_RATE_API_KEY = ""
 
 
 # Static files (CSS, JavaScript, Images)
