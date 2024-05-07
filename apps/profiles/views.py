@@ -21,6 +21,8 @@ from utils.fuzzysearch import FuzzySearchFilter
 from django_countries import countries
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from ..inventory.models import Product
+
 # Create your views here.
 
 
@@ -144,6 +146,14 @@ def disable_company(request):
         company_instance[0].save()
     else:
         return Response("No company with that id", status=status.HTTP_400_BAD_REQUEST)
+    
+    # grab all products sold by this company
+    products = Product.objects.filter(seller=company_id)
+    # loop through and disable them
+    for product in products:
+        product.is_active = False
+        product.save()
+    
     return Response("company disabled", status=status.HTTP_200_OK)
 
 
@@ -192,6 +202,7 @@ def get_number_of_reps(request):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
+@authentication_classes([JWTAuthentication])
 def get_users_companies(request):
     data = request.data
     user = request.user
