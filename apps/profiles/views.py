@@ -169,6 +169,13 @@ def enable_company(request):
         company_instance[0].save()
     else:
         return Response("No company with that id", status=status.HTTP_400_BAD_REQUEST)
+    
+    # grab all products sold by this company
+    products = Product.objects.filter(seller=company_id)
+    # loop through and enable them
+    for product in products:
+        product.is_active = True
+        product.save()
     return Response("company enabled", status=status.HTTP_200_OK)
 
 
