@@ -14,7 +14,7 @@ from .serializers import (
     ProductDocumentSerializer,
     CategoryReturnSerializer,
 )
-from .models import Product, Category, CurrencyRates, Company, ProductViews
+from .models import Product, Category, CurrencyRates, Company, ProductViews, Certification, SampleInfo, AdditionalInformation, PaymentMethods, TradingAreas
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
 from django.db import transaction
@@ -376,3 +376,5 @@ def get_currency_rates(request):
 
     serializer = CurrencyRatesSerializer(rates)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+

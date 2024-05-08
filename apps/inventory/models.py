@@ -227,3 +227,45 @@ class ProductViews(TimeStampedUUIDModel):
     class Meta:
         verbose_name = "Total Views on Product"
         verbose_name_plural = "Total Product Views"
+
+
+class Certification(models.Model):
+    name = models.CharField(max_length=500, verbose_name="Certification Name") # this has multiple choice which needs to be made to accept a string input from frontend
+    number = models.IntegerField(default=0, verbsoe_name="Certification Number")
+    organization = models.CharField(max_length=250)
+    issue_date = models.DateField()
+    date_valid = models.DateField()
+
+    def __str__(self):
+        return self.certificate_name
+
+
+class AdditionalInformation(models.Model):
+    production_capacity = models.CharField(max_length=250, blank=True, null=True)
+    unit = models.CharField(max_length=250, blank=True, null=True)
+    time_span = models.CharField(max_length=250, blank=True, null=True) # this has multiple choice which needs to be made to accept a string input from frontend
+    brand_name = models.CharField(max_length=250, blank=True, null=True)
+    def __str__(self):
+        return self.production_capacity
+
+class SampleInfo(models.Model):
+    maximum_order_quality = models.CharField(max_length=250, blank=True, null=True)
+    measure = models.CharField(max_length=250, blank=True, null=True) # this has about 4 multi-choices and might be subject to change.
+    sample_price = models.CharField(max_length=250, blank=True, null=True)
+    brand_name = models.CharField(max_length=250, blank=True, null=True)
+    def __str__(self):
+        return self.maximum_order_quality
+
+class PaymentMethods(models.Model):
+    papss = models.BooleanField(default=False)
+    Peoples_Pay = models.BooleanField(default=False)
+    letter_of_credit = models.BooleanField(default=False, verbose_name=_("L/C (letter of credit)"))
+    Cash_Against_Document = models.BooleanField(default=False, verbose_name=_("CAD (Cash against document)"))
+    def __str__(self):
+        return self.Peoples_Pay
+
+class TradingAreas(models.Model):
+    domestic = models.BooleanField(default=False, verbose_name=_("Domestic Market"))
+    international = models.BooleanField(default=False, verbose_name=_("International Market"))
+    def __str__(self):
+        return self.domestic

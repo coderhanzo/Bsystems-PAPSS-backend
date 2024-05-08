@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, ProductImage, CurrencyRates, ProductDocument
+from .models import Product, Category, ProductImage, CurrencyRates, ProductDocument, Certification, AdditionalInformation, SampleInfo, PaymentMethods, TradingAreas
 from utils.utils import Base64File
 import base64
 
@@ -133,4 +133,30 @@ class ProductDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductDocument
+        fields = "__all__"
+
+
+class CertificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Certification
+        fields = "__all__"
+
+class AdditionalInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdditionalInformation
+        fields = "__all__"
+
+class PaymentMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethods
+        fields = "__all__"
+
+class SimpleInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SampleInfo
+        fields = "__all__"
+
+class TradeAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TradingAreas
         fields = "__all__"
