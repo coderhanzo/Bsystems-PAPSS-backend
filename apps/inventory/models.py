@@ -8,6 +8,7 @@ from datetime import timedelta
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from multiselectfield import MultiSelectField
 import uuid
 
 # Create your models here.
@@ -229,43 +230,113 @@ class ProductViews(TimeStampedUUIDModel):
         verbose_name_plural = "Total Product Views"
 
 
+CERTIFICATE_TYPE = (
+    ("BRC", _("BRC Standard")),
+    ("COSMOS", _("COSMOS Organic and Natural")),
+    ("CFC", _("Cruelty Free Certificate")),
+    ("EnergyStar", _("Energy Star")),
+    ("FairTradeCertificate", _("Fair Trade Certificate")),
+    ("FCC", _("FCC Certificate")),
+    ("FSC", _("FSC Certificate")),
+    ("GOTS", _("GOTS Certificcate")),
+    ("HACCP", _("HACCP")),
+    ("HALAL", _("HALAL Certificate")),
+    ("ISO9001", _("ISO 9001")),
+    ("ISO14001", _("ISO 14001")),
+    ("ISO22000", _("ISO 22000")),
+    ("ISO_TS", _("ISO_TS 16949")),
+    ("Kosher", _("Kosher")),
+    ("Non-GMO", _("Non-GMO Certificate")),
+    ("RoHS", _("RoHS Compliance")),
+    ("Wrap", _("Wrap Certificate")),
+    ("Other", _("Other")),
+)
+
+TIME_SPAN = (
+    ("Weekly", _("Weekly")),
+    ("Monthly", _("Monthly")),
+    ("Quarterly", _("Quarterly")),
+    ("Bi-Yearly", _("Bi-Yearly")),
+    ("Yearly", _("Yearly")),
+)
+
+MEASURE_UNIT = (
+    ("Kilogram", _("Kilogram")),
+    ("Litre", _("Litre")),
+    ("Pack", _("Pack")),
+    ("Set", _("Set")),
+    ("Ton", _("Ton")),
+)
+
+SHIPPING_INFORMATION = (
+    ("ESX", _("ESX")),
+    ("FCA", _("FCA")),
+    ("FAS", _("FAS")),
+    ("FOB", _("FOB")),
+    ("CFR/CIF", _("CFR/CIF")),
+    ("DPU", _("DPU")),
+    ("DPA", _("DPA")),
+    ("DDP", _("DDP")),
+)
+
+TRADING_AREAS = (
+    ("Domestic", _("Domestic")),
+    ("International", _("International")),
+)
+
+"""
+All fields with MultiSelectField will be saved as a comma separated string
+add "max_choices" to limit the number of choices
+"""
+
 class Certification(models.Model):
-    name = models.CharField(max_length=500, verbose_name="Certification Name") # this has multiple choice which needs to be made to accept a string input from frontend
-    number = models.IntegerField(default=0, verbsoe_name="Certification Number")
+    name = models.CharField(choices=CERTIFICATE_TYPE, default="BRC", verbose_name="Certification Name", max_length=250)
+    number = models.IntegerField(default=0, verbose_name="Certification Number")
     organization = models.CharField(max_length=250)
     issue_date = models.DateField()
     date_valid = models.DateField()
 
     def __str__(self):
-        return self.certificate_name
+        return self.name
 
 
 class AdditionalInformation(models.Model):
     production_capacity = models.CharField(max_length=250, blank=True, null=True)
     unit = models.CharField(max_length=250, blank=True, null=True)
-    time_span = models.CharField(max_length=250, blank=True, null=True) # this has multiple choice which needs to be made to accept a string input from frontend
+    time_span = models.CharField(choices=TIME_SPAN, default="Monthly", verbose_name="Time Span",max_length=250) 
     brand_name = models.CharField(max_length=250, blank=True, null=True)
     def __str__(self):
         return self.production_capacity
 
 class SampleInfo(models.Model):
     maximum_order_quality = models.CharField(max_length=250, blank=True, null=True)
-    measure = models.CharField(max_length=250, blank=True, null=True) # this has about 4 multi-choices and might be subject to change.
+    measure = models.CharField(choices=MEASURE_UNIT, default="Kilogram", verbose_name="Measure", max_length=250) 
     sample_price = models.CharField(max_length=250, blank=True, null=True)
     brand_name = models.CharField(max_length=250, blank=True, null=True)
     def __str__(self):
         return self.maximum_order_quality
 
+PAYMENT_METHODS = (
+    ("papss", _("PAPSS")),
+    ("Peoples_Pay", _("Peoples Pay")),
+    ("Letter_of_credit", _("Letter of Credit")),
+    ("Cash_Against_Document", _("Cash Against Document")),
+
+)
+
 class PaymentMethods(models.Model):
-    papss = models.BooleanField(default=False)
-    Peoples_Pay = models.BooleanField(default=False)
-    letter_of_credit = models.BooleanField(default=False, verbose_name=_("L/C (letter of credit)"))
-    Cash_Against_Document = models.BooleanField(default=False, verbose_name=_("CAD (Cash against document)"))
+    payment_selection = MultiSelectField(choices=PAYMENT_METHODS, verbose_name="Payment Method", max_length=250)
     def __str__(self):
-        return self.Peoples_Pay
+        return self.payment_selection
+
 
 class TradingAreas(models.Model):
-    domestic = models.BooleanField(default=False, verbose_name=_("Domestic Market"))
-    international = models.BooleanField(default=False, verbose_name=_("International Market"))
+    trade_areas = MultiSelectField(choices=TRADING_AREAS, verbose_name="Trading Area", max_length=250)
     def __str__(self):
-        return self.domestic
+        return self.trade_areas
+
+
+class ShippingInformation(models.Model):
+    shopping_infromation = MultiSelectField(choices=SHIPPING_INFORMATION, verbose_name="Shipping Information",max_length=250)
+    def __str__(self):
+        return self.shopping_infromation

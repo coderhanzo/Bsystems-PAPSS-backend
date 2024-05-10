@@ -13,6 +13,11 @@ from .serializers import (
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
     CategoryReturnSerializer,
+    CertificationSerializer,
+    AdditionalInformationSerializer,
+    PaymentMethodSerializer,
+    SimpleInfoSerializer,
+    TradeAreaSerializer,
 )
 from .models import Product, Category, CurrencyRates, Company, ProductViews, Certification, SampleInfo, AdditionalInformation, PaymentMethods, TradingAreas
 from apps.profiles.models import ContactPerson
@@ -376,5 +381,4 @@ def get_currency_rates(request):
 
     serializer = CurrencyRatesSerializer(rates)
     return Response(serializer.data, status=status.HTTP_200_OK)
-
 
