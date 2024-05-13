@@ -22,7 +22,7 @@ from .serializers import (
 from .models import Product, Category, CurrencyRates, Company, ProductViews, Certification, SampleInfo, AdditionalInformation, PaymentMethods, TradingAreas
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from django.utils.timezone import now
 from datetime import timedelta
@@ -382,3 +382,19 @@ def get_currency_rates(request):
     serializer = CurrencyRatesSerializer(rates)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(["POST"])
+@transaction.atomic
+def submit_certificate(request):
+    try:
+        certification_data = request.data
+        serializer = CertificationSerializer(data=certification_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    except IntegrityError as e:
+        return Response ({"detail": str(e)}, status=status.HTTP_409_CONFLICT)
+    except Exception as e:
+        return Response ({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

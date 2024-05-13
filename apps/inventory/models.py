@@ -284,9 +284,17 @@ TRADING_AREAS = (
     ("International", _("International")),
 )
 
+PAYMENT_METHODS = (
+    ("papss", _("PAPSS")),
+    ("Peoples_Pay", _("Peoples Pay")),
+    ("Letter_of_credit", _("Letter of Credit")),
+    ("Cash_Against_Document", _("Cash Against Document")),
+
+)
+
 """
-All fields with MultiSelectField will be saved as a comma separated string
-add "max_choices" to limit the number of choices
+All fields with MultiSelectField will be saved as a comma separated string,
+add "max_choices" to limit the number of choices for the radio buttons
 """
 
 class Certification(models.Model):
@@ -316,13 +324,6 @@ class SampleInfo(models.Model):
     def __str__(self):
         return self.maximum_order_quality
 
-PAYMENT_METHODS = (
-    ("papss", _("PAPSS")),
-    ("Peoples_Pay", _("Peoples Pay")),
-    ("Letter_of_credit", _("Letter of Credit")),
-    ("Cash_Against_Document", _("Cash Against Document")),
-
-)
 
 class PaymentMethods(models.Model):
     payment_selection = MultiSelectField(choices=PAYMENT_METHODS, verbose_name="Payment Method", max_length=250)
