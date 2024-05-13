@@ -147,9 +147,25 @@ class AdditionalInformationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
+    papss = serializers.SerializerMethodField()
+    peoples_pay = serializers.SerializerMethodField()
+    letter_of_credit = serializers.SerializerMethodField()
+    cash_against_document = serializers.SerializerMethodField()
     class Meta:
         model = PaymentMethods
         fields = "__all__"
+
+    def get_papss(self, obj):
+        return obj.papss in obj.payment_selection
+
+    def get_peoples_pay(self, obj):
+        return obj.peoples_pay in obj.payment_selection
+
+    def get_letter_of_credit(self, obj):
+        return obj.letter_of_credit in obj.payment_selection
+
+    def get_cash_against_document(self, obj):
+        return obj.cash_against_document in obj.payment_selection
 
 class SimpleInfoSerializer(serializers.ModelSerializer):
     class Meta:

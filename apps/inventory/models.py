@@ -286,9 +286,9 @@ TRADING_AREAS = (
 
 PAYMENT_METHODS = (
     ("papss", _("PAPSS")),
-    ("Peoples_Pay", _("Peoples Pay")),
-    ("Letter_of_credit", _("Letter of Credit")),
-    ("Cash_Against_Document", _("Cash Against Document")),
+    ("peoples_pay", _("Peoples Pay")),
+    ("letter_of_credit", _("Letter of Credit")),
+    ("cash_against_document", _("Cash Against Document")),
 
 )
 

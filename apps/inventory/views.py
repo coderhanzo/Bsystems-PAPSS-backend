@@ -398,3 +398,9 @@ def submit_certificate(request):
         return Response ({"detail": str(e)}, status=status.HTTP_409_CONFLICT)
     except Exception as e:
         return Response ({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(["GET"])
+def get_payment_methods(request):
+    payment_methods = PaymentMethods.objects.all()
+    serializer = PaymentMethodSerializer(payment_methods, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
