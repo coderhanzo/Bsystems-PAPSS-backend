@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, ProductImage, CurrencyRates, ProductDocument, Certification, AdditionalInformation, SampleInfo, PaymentMethods, TradingAreas
+from .models import Product, Category, ProductImage, CurrencyRates, ProductDocument
 from utils.utils import Base64File
 import base64
 

@@ -12,14 +12,9 @@ from .serializers import (
     ProductImageSerializer,
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
-    CategoryReturnSerializer,
-    CertificationSerializer,
-    AdditionalInformationSerializer,
-    PaymentMethodSerializer,
-    SimpleInfoSerializer,
-    TradeAreaSerializer,
+    CategoryReturnSerializer
 )
-from .models import Product, Category, CurrencyRates, Company, ProductViews, Certification, SampleInfo, AdditionalInformation, PaymentMethods, TradingAreas
+from .models import Product, Category, CurrencyRates, Company, ProductViews
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
 from django.db import transaction, IntegrityError

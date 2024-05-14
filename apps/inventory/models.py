@@ -230,28 +230,54 @@ All fields with MultiSelectField will be saved as a comma separated string,
 add "max_choices" to limit the number of choices for the radio buttons
 """
     cert = MultiSelectField(
-        choices=CERTIFICATE_TYPE, max_length=250, verbose_name=_("Certification Name")
+        choices=CERTIFICATE_TYPE,
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name=_("Certification Name"),
     )
     cert_number = models.IntegerField(default=0, verbose_name=_("Certification Number"))
-    organization = models.CharField(max_length=250)
-    issue_date = models.DateField(help_text=_("format: Y-m-d"))
-    date_valid = models.DateField(help_text=_("format: Y-m-d"))
-    product_cap = models.CharField(max_length=250, verbose_name=_("Product Capacity"))
+    organization = models.CharField(max_length=250, blank=True, null=True)
+    issue_date = models.DateField(help_text=_("format: Y-m-d"), blank=True, null=True)
+    date_valid = models.DateField(help_text=_("format: Y-m-d"), blank=True, null=True)
+    product_cap = models.CharField(
+        max_length=250, blank=True, null=True, verbose_name=_("Product Capacity")
+    )
     # unit = models.ForeignKey(SampleInformation, on_delete=models.CASCADE, blank=True, null=True)
     time_span = MultiSelectField(
-        choices=TIME_SPAN, max_length=250, verbose_name=_("Time Span")
+        choices=TIME_SPAN,
+        max_length=250,
+        verbose_name=_("Time Span"),
+        blank=True,
+        null=True,
     )
-    brand_name = models.CharField(max_length=250, verbose_name=_("Brand Name"))
+    brand_name = models.CharField(
+        max_length=250, blank=True, null=True, verbose_name=_("Brand Name")
+    )
     order_quantity = models.CharField(
-        max_length=250, verbose_name=_("Maximum Order Quantity")
+        max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
     )
     order_unit = MultiSelectField(
-        choices=MEASURE_UNIT, max_length=250, verbose_name=_("Measure")
+        choices=MEASURE_UNIT,
+        max_length=250,
+        verbose_name=_("Measure"),
+        blank=True,
+        null=True,
     )
     sample_price = models.DecimalField(
-        decimal_places=2, default="0.00", max_digits=20, verbose_name=_("Sample Price")
+        decimal_places=2,
+        default="0.00",
+        max_digits=20,
+        verbose_name=_("Sample Price"),
+        blank=True,
+        null=True,
     )
-    brand_name = models.CharField(max_length=250, verbose_name=_("Brand Name"))
+    brand_name = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name=_("Brand Name"),
+    )
 
     papss = models.BooleanField(default=False, verbose_name=_("PAPSS"))
     peoples_pay = models.BooleanField(default=False, verbose_name=_("Peoples Pay"))
@@ -270,30 +296,15 @@ add "max_choices" to limit the number of choices for the radio buttons
         unique=False,
         null=False,
         blank=False,
-        default=True,
         verbose_name=_("CFR/CIF"),
     )
-    exw = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    fca = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    fas = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    fob = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    dpu = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    dap = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
-    ddp = models.BooleanField(
-        default=False, unique=False, null=False, blank=False, default=True
-    )
+    exw = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fca = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fas = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fob = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    dpu = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    dap = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    ddp = models.BooleanField(default=False, unique=False, null=False, blank=False)
 
     def __str__(self):
         return str(self.name) if self.name else ""
