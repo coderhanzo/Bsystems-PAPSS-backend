@@ -125,7 +125,7 @@ def get_number_of_products(request):
 def create_product(request):
     data = request.data
 
-    # temporariliy here for dev or maybe not? If a contact person has many companies then they
+    # temporarily here for dev or maybe not? If a contact person has many companies then they
     # need to explicitly state which company to add this product to
     seller_name = data["seller"]
     company_query = Company.objects.filter(company_name=seller_name)
@@ -380,27 +380,4 @@ def get_currency_rates(request):
         rates = serializer.save()
 
     serializer = CurrencyRatesSerializer(rates)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(["POST"])
-@transaction.atomic
-def submit_certificate(request):
-    try:
-        certification_data = request.data
-        serializer = CertificationSerializer(data=certification_data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-    except IntegrityError as e:
-        return Response ({"detail": str(e)}, status=status.HTTP_409_CONFLICT)
-    except Exception as e:
-        return Response ({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-@api_view(["GET"])
-def get_payment_methods(request):
-    payment_methods = PaymentMethods.objects.all()
-    serializer = PaymentMethodSerializer(payment_methods, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

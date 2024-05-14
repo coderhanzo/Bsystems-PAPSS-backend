@@ -13,5 +13,4 @@ urlpatterns = [
     path("disable-product/", views.disable_product),
     path("my-products/", views.get_my_products),
     path("enable-product/", views.enable_product),
-    path("submit_certificate/", views.submit_certificate),
 ]
