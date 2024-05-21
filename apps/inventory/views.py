@@ -12,12 +12,12 @@ from .serializers import (
     ProductImageSerializer,
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
-    CategoryReturnSerializer,
+    CategoryReturnSerializer
 )
 from .models import Product, Category, CurrencyRates, Company, ProductViews
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from django.utils.timezone import now
 from datetime import timedelta
@@ -120,7 +120,7 @@ def get_number_of_products(request):
 def create_product(request):
     data = request.data
 
-    # temporariliy here for dev or maybe not? If a contact person has many companies then they
+    # temporarily here for dev or maybe not? If a contact person has many companies then they
     # need to explicitly state which company to add this product to
     seller_name = data["seller"]
     company_query = Company.objects.filter(company_name=seller_name)

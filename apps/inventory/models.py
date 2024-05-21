@@ -8,9 +8,71 @@ from datetime import timedelta
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from multiselectfield import MultiSelectField
 import uuid
 
 # Create your models here.
+
+CERTIFICATE_TYPE = (
+    ("BRC", _("BRC Standard")),
+    ("COSMOS", _("COSMOS Organic and Natural")),
+    ("CFC", _("Cruelty Free Certificate")),
+    ("EnergyStar", _("Energy Star")),
+    ("FairTradeCertificate", _("Fair Trade Certificate")),
+    ("FCC", _("FCC Certificate")),
+    ("FSC", _("FSC Certificate")),
+    ("GOTS", _("GOTS Certificcate")),
+    ("HACCP", _("HACCP")),
+    ("HALAL", _("HALAL Certificate")),
+    ("ISO9001", _("ISO 9001")),
+    ("ISO14001", _("ISO 14001")),
+    ("ISO22000", _("ISO 22000")),
+    ("ISO_TS", _("ISO_TS 16949")),
+    ("Kosher", _("Kosher")),
+    ("Non-GMO", _("Non-GMO Certificate")),
+    ("RoHS", _("RoHS Compliance")),
+    ("Wrap", _("Wrap Certificate")),
+    ("Other", _("Other")),
+)
+
+TIME_SPAN = (
+    ("Weekly", _("Weekly")),
+    ("Monthly", _("Monthly")),
+    ("Quarterly", _("Quarterly")),
+    ("Bi-Yearly", _("Bi-Yearly")),
+    ("Yearly", _("Yearly")),
+)
+
+MEASURE_UNIT = (
+    ("Kilogram", _("Kilogram")),
+    ("Litre", _("Litre")),
+    ("Pack", _("Pack")),
+    ("Set", _("Set")),
+    ("Ton", _("Ton")),
+)
+
+SHIPPING_INFORMATION = (
+    ("ESX", _("ESX")),
+    ("FCA", _("FCA")),
+    ("FAS", _("FAS")),
+    ("FOB", _("FOB")),
+    ("CFR/CIF", _("CFR/CIF")),
+    ("DPU", _("DPU")),
+    ("DPA", _("DPA")),
+    ("DDP", _("DDP")),
+)
+
+TRADING_AREAS = (
+    ("Domestic", _("Domestic")),
+    ("International", _("International")),
+)
+
+PAYMENT_METHODS = (
+    ("papss", _("PAPSS")),
+    ("peoples_pay", _("Peoples Pay")),
+    ("letter_of_credit", _("Letter of Credit")),
+    ("cash_against_document", _("Cash Against Document")),
+)
 
 
 class TimeStampedUUIDModel(models.Model):
@@ -95,6 +157,13 @@ class ProductImage(models.Model):
     image = models.FileField(upload_to=user_directory_path, blank=True, null=True)
 
 
+# class SampleInformation(models.Model):
+#     measure_unit = models.Charfield(max_lenght=250, blank=True, null=True)
+
+#     def __str__(self):
+#         return self.measure_unit
+
+
 class Product(models.Model):
     """
     Product details table
@@ -142,8 +211,6 @@ class Product(models.Model):
         verbose_name=_("date product last updated"),
         help_text=_("format: Y-m-d H:M:S"),
     )
-    weight = models.CharField(max_length=20, blank=True, null=True)
-    cost = models.DecimalField(decimal_places=2, default="0.00", max_digits=20)
 
     def user_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -155,8 +222,89 @@ class Product(models.Model):
         ProductDocument, blank=True, related_name="product"
     )
     views = models.IntegerField(default=0)
-
     unit = models.CharField(max_length=250, blank=True, null=True)
+    weight = models.CharField(max_length=20, blank=True, null=True)
+    cost = models.DecimalField(decimal_places=2, default="0.00", max_digits=20)
+    """
+All fields with MultiSelectField will be saved as a comma separated string,
+add "max_choices" to limit the number of choices for the radio buttons
+"""
+    cert = MultiSelectField(
+        choices=CERTIFICATE_TYPE,
+        blank=True,
+        null=True,
+        max_length=250,
+        verbose_name=_("Certification Name"),
+    )
+    cert_number = models.IntegerField(default=0, verbose_name=_("Certification Number"))
+    organization = models.CharField(max_length=250, blank=True, null=True)
+    issue_date = models.DateField(help_text=_("format: Y-m-d"), blank=True, null=True)
+    date_valid = models.DateField(help_text=_("format: Y-m-d"), blank=True, null=True)
+    product_cap = models.CharField(
+        max_length=250, blank=True, null=True, verbose_name=_("Product Capacity")
+    )
+    # unit = models.ForeignKey(SampleInformation, on_delete=models.CASCADE, blank=True, null=True)
+    time_span = MultiSelectField(
+        choices=TIME_SPAN,
+        max_length=250,
+        verbose_name=_("Time Span"),
+        blank=True,
+        null=True,
+    )
+    brand_name = models.CharField(
+        max_length=250, blank=True, null=True, verbose_name=_("Brand Name")
+    )
+    order_quantity = models.CharField(
+        max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
+    )
+    order_unit = MultiSelectField(
+        choices=MEASURE_UNIT,
+        max_length=250,
+        verbose_name=_("Measure"),
+        blank=True,
+        null=True,
+    )
+    sample_price = models.DecimalField(
+        decimal_places=2,
+        default="0.00",
+        max_digits=20,
+        verbose_name=_("Sample Price"),
+        blank=True,
+        null=True,
+    )
+    brand_name = models.CharField(
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name=_("Brand Name"),
+    )
+
+    papss = models.BooleanField(default=False, verbose_name=_("PAPSS"))
+    peoples_pay = models.BooleanField(default=False, verbose_name=_("Peoples Pay"))
+    lc = models.BooleanField(default=False, verbose_name=_("L/C Letter of Credit"))
+    CAD = models.BooleanField(
+        default=False, verbose_name=_("CAD (Cash Against Document)")
+    )
+    domestic_market = models.BooleanField(
+        default=False, verbose_name=_("Domestic Market")
+    )
+    international_market = models.BooleanField(
+        default=False, verbose_name=_("International Market")
+    )
+    cfr = models.BooleanField(
+        default=False,
+        unique=False,
+        null=False,
+        blank=False,
+        verbose_name=_("CFR/CIF"),
+    )
+    exw = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fca = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fas = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    fob = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    dpu = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    dap = models.BooleanField(default=False, unique=False, null=False, blank=False)
+    ddp = models.BooleanField(default=False, unique=False, null=False, blank=False)
 
     def __str__(self):
         return str(self.name) if self.name else ""
