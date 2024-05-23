@@ -13,4 +13,5 @@ urlpatterns = [
     path("get-countries/", views.get_all_countries, name="get_countries"),
     path("disable-company/", views.disable_company),
     path("enable-company/", views.enable_company),
+    path("get-all-companies/", views.get_all_companies, name="get_all_companies")
 ]

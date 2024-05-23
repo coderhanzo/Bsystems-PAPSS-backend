@@ -198,6 +198,14 @@ def get_number_of_companies(request):
     return Response(
         {"registered_companies": len(Company.objects.all())}, status=status.HTTP_200_OK
     )
+    
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+@authentication_classes([JWTAuthentication])
+def get_all_companies(request):
+    return Response(
+        {"registered_companies": Company.objects.all()}, status=status.HTTP_200_OK
+    )
 
 
 @api_view(["GET"])
