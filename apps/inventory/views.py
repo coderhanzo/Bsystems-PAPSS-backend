@@ -12,7 +12,7 @@ from .serializers import (
     ProductImageSerializer,
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
-    CategoryReturnSerializer
+    CategoryReturnSerializer,
 )
 from .models import Product, Category, CurrencyRates, Company, ProductViews
 from apps.profiles.models import ContactPerson
@@ -116,6 +116,7 @@ def get_number_of_products(request):
 
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
+@authentication_classes([JWTAuthentication])
 @transaction.atomic
 def create_product(request):
     data = request.data
