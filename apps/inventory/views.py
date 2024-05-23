@@ -12,7 +12,7 @@ from .serializers import (
     ProductImageSerializer,
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
-    CategoryReturnSerializer
+    CategoryReturnSerializer,
 )
 from .models import Product, Category, CurrencyRates, Company, ProductViews
 from apps.profiles.models import ContactPerson
