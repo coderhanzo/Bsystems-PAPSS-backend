@@ -203,8 +203,10 @@ def get_number_of_companies(request):
 @permission_classes([permissions.IsAdminUser])
 @authentication_classes([JWTAuthentication])
 def get_all_companies(request):
+    serializer = CompanySearchSerializer(data=Company.objects.all(), many=True)
+    serializer.is_valid()
     return Response(
-        {"registered_companies": Company.objects.all()}, status=status.HTTP_200_OK
+        {"registered_companies": serializer.data}, status=status.HTTP_200_OK
     )
 
 
