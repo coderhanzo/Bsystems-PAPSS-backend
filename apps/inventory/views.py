@@ -377,3 +377,17 @@ def get_currency_rates(request):
 
     serializer = CurrencyRatesSerializer(rates)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+@authentication_classes([JWTAuthentication])
+def get_all_products(request):
+    serializer = ProductReturnSerializer(data=Product.objects.all(), many=True)
+    serializer.is_valid()
+    return Response(
+        {
+            "all_products": serializer.data
+        },
+        status=status.HTTP_200_OK
+    )
