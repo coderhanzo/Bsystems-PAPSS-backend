@@ -217,7 +217,7 @@ class Product(models.Model):
         return "user_{0}/{1}".format("main", filename)
 
     brochure = models.FileField(upload_to=user_directory_path, blank=True, null=True)
-    images = models.ManyToManyField(ProductImage, blank=True, related_name="product")
+    images = models.ForeignKey(ProductImage, blank=True, null=True, related_name="product", on_delete=models.SET_NULL)
     documents = models.ManyToManyField(
         ProductDocument, blank=True, related_name="product"
     )
