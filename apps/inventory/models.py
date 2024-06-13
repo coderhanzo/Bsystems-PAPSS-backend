@@ -363,11 +363,3 @@ class ProductViews(TimeStampedUUIDModel):
         verbose_name = "Total Views on Product"
         verbose_name_plural = "Total Product Views"
 
-
-class SourcingRequest(TimeStampedUUIDModel):
-    product = models.ForeignKey(
-        Product, related_name="sourcing_request", on_delete=models.CASCADE
-    )
-
-    def __str__(self):
-        return self.product.name
