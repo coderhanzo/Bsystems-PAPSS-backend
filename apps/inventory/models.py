@@ -222,7 +222,7 @@ class Product(models.Model):
 All fields with MultiSelectField will be saved as a comma separated string,
 add "max_choices" to limit the number of choices for the radio buttons
 """
-    cert = MultiSelectField(
+    cert = models.CharField(
         choices=CERTIFICATE_TYPE,
         blank=True,
         null=True,
@@ -237,7 +237,7 @@ add "max_choices" to limit the number of choices for the radio buttons
         max_length=250, blank=True, null=True, verbose_name=_("Product Capacity")
     )
     # unit = models.ForeignKey(SampleInformation, on_delete=models.CASCADE, blank=True, null=True)
-    time_span = MultiSelectField(
+    time_span = models.CharField(
         choices=TIME_SPAN,
         max_length=250,
         verbose_name=_("Time Span"),
@@ -250,7 +250,7 @@ add "max_choices" to limit the number of choices for the radio buttons
     order_quantity = models.CharField(
         max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
     )
-    order_unit = MultiSelectField(
+    order_unit = models.CharField(
         choices=MEASURE_UNIT,
         max_length=250,
         verbose_name=_("Measure"),

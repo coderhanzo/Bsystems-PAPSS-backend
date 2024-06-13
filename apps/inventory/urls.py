@@ -13,4 +13,9 @@ urlpatterns = [
     path("disable-product/", views.disable_product),
     path("my-products/", views.get_my_products),
     path("enable-product/", views.enable_product),
+    path("get-all-products/", views.get_all_products, name="get_all_products")
+    # new path here for products filtered by company
+
+    # new path here for products filtered by category
+    # path("products-by-company/", views, name="get_products_by_company")
 ]
