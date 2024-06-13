@@ -157,13 +157,6 @@ class ProductImage(models.Model):
     image = models.FileField(upload_to=user_directory_path, blank=True, null=True)
 
 
-# class SampleInformation(models.Model):
-#     measure_unit = models.Charfield(max_lenght=250, blank=True, null=True)
-
-#     def __str__(self):
-#         return self.measure_unit
-
-
 class Product(models.Model):
     """
     Product details table
@@ -278,33 +271,27 @@ add "max_choices" to limit the number of choices for the radio buttons
         null=True,
         verbose_name=_("Brand Name"),
     )
-
-    papss = models.BooleanField(default=False, verbose_name=_("PAPSS"))
-    peoples_pay = models.BooleanField(default=False, verbose_name=_("Peoples Pay"))
-    lc = models.BooleanField(default=False, verbose_name=_("L/C Letter of Credit"))
-    CAD = models.BooleanField(
-        default=False, verbose_name=_("CAD (Cash Against Document)")
+    paymentS = MultiSelectField(
+        choices=PAYMENT_METHODS,
+        max_length=250,
+        verbose_name=_("Payment Methods"),
+        blank=True,
+        null=True,
     )
-    domestic_market = models.BooleanField(
-        default=False, verbose_name=_("Domestic Market")
+    market_type = models.CharField(
+        choices=TRADING_AREAS,
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name=_("Trading Areas"),
     )
-    international_market = models.BooleanField(
-        default=False, verbose_name=_("International Market")
+    shipping = models.CharField(
+        choices=SHIPPING_INFORMATION,
+        max_length=250,
+        blank=True,
+        null=True,
+        verbose_name=_("Shipping Information"),
     )
-    cfr = models.BooleanField(
-        default=False,
-        unique=False,
-        null=False,
-        blank=False,
-        verbose_name=_("CFR/CIF"),
-    )
-    exw = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    fca = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    fas = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    fob = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    dpu = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    dap = models.BooleanField(default=False, unique=False, null=False, blank=False)
-    ddp = models.BooleanField(default=False, unique=False, null=False, blank=False)
 
     def __str__(self):
         return str(self.name) if self.name else ""
@@ -375,3 +362,12 @@ class ProductViews(TimeStampedUUIDModel):
     class Meta:
         verbose_name = "Total Views on Product"
         verbose_name_plural = "Total Product Views"
+
+
+class SourcingRequest(TimeStampedUUIDModel):
+    product = models.ForeignKey(
+        Product, related_name="sourcing_request", on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.product.name
