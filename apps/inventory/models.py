@@ -3,6 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
 from django.utils.translation import gettext_lazy as _
 from autoslug import AutoSlugField
 from apps.profiles.models import Company
+from django_countries.fields import CountryField
 from django.utils.timezone import localdate, now
 from datetime import timedelta
 import requests
@@ -363,3 +364,42 @@ class ProductViews(TimeStampedUUIDModel):
         verbose_name = "Total Views on Product"
         verbose_name_plural = "Total Product Views"
 
+
+class SourcingRequest(models.Model):
+    name = models.CharField(
+        verbose_name=_("Prodcut Name"), max_length=50, blank=True, null=True
+    )
+    category = models.OneToOneField(
+        Category, verbose_name=_("Product Category"), blank=True, null=True, on_delete=models.CASCADE
+    )
+    quantity = models.TextField(
+        verbose_name=_("Fill in Sourcing Requirements"),
+        blank=True,
+        null=True,
+        max_length=500,
+    )
+    terms_of_delivery = models.CharField(
+        verbose_name=_("Terms of Delivery"), max_length=50, blank=True, null=True
+    )
+    delivery_location = CountryField(
+        verbose_name=_("Delivery Country"), default="PL", blank=True
+    )
+    required_amount = models.DecimalField(
+        decimal_places=2,
+        default="0.00",
+        max_digits=20,
+        verbose_name=_("Required Amount"),
+        blank=True,
+        null=True,
+    )
+    unit = models.CharField(
+        choices=MEASURE_UNIT,
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name=_("Unit"),
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.name) if self.name else ""

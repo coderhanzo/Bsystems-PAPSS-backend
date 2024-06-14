@@ -13,8 +13,9 @@ from .serializers import (
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
     CategoryReturnSerializer,
+    SourcingRequestSerializer
 )
-from .models import Product, Category, CurrencyRates, Company, ProductViews
+from .models import Product, Category, CurrencyRates, Company, ProductViews, SourcingRequest
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
 from django.db import transaction, IntegrityError
@@ -391,3 +392,30 @@ def get_all_products(request):
         },
         status=status.HTTP_200_OK
     )
+
+
+class SourcingRequestListCreateView(generics.ListCreateAPIView):
+    serializer_class = SourcingRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = SourcingRequest.objects.all()
+        category_id = self.request.query_params.get("category", None)
+        if category_id is not None:
+            queryset = queryset.filter(category__id=category_id)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class SourcingRequestDeleteView(generics.DestroyAPIView):
+    queryset = SourcingRequest.objects.all()
+    serializer_class = SourcingRequestSerializer
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return SourcingRequest.objects.all()
+        else:
+            return SourcingRequest.objects.filter(user=self.request.user)

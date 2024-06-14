@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import Product, Category, ProductImage, CurrencyRates, ProductDocument
+from .models import (
+    Product,
+    Category,
+    ProductImage,
+    CurrencyRates,
+    ProductDocument,
+    SourcingRequest,
+)
 from utils.utils import Base64File
 import base64
 
@@ -65,9 +72,9 @@ class ProductReturnSerializer(serializers.ModelSerializer):
             {
                 "filename": document.name,
                 "file": "https://www.tradepayafrica.com" + document.file.url,
-                "date_uploaded": document.date_uploaded
-                if document.date_uploaded
-                else "",
+                "date_uploaded": (
+                    document.date_uploaded if document.date_uploaded else ""
+                ),
             }
             for document in obj.documents.all()
         ]
@@ -133,4 +140,14 @@ class ProductDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductDocument
+        fields = "__all__"
+
+
+class SourcingRequestSerializer(serializers.ModelSerializer):
+    Category = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = SourcingRequest
         fields = "__all__"
