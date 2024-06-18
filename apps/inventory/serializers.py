@@ -6,6 +6,8 @@ from .models import (
     CurrencyRates,
     ProductDocument,
     SourcingRequest,
+    QuotationForm,
+    QuotationImage,
 )
 from utils.utils import Base64File
 import base64
@@ -150,4 +152,20 @@ class SourcingRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SourcingRequest
+        fields = "__all__"
+
+
+class QuotationImageSerializer(serializers.ModelSerializer):
+    quotation_image = Base64File()
+
+    class Meta:
+        model = QuotationImage
+        fields = "__all__"
+
+
+class QuotationSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = QuotationForm
         fields = "__all__"

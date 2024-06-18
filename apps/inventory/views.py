@@ -13,9 +13,19 @@ from .serializers import (
     CurrencyRatesSerializer,
     ProductDocumentSerializer,
     CategoryReturnSerializer,
-    SourcingRequestSerializer
+    SourcingRequestSerializer,
+    QuotationImageSerializer,
+    QuotationSerializer,
 )
-from .models import Product, Category, CurrencyRates, Company, ProductViews, SourcingRequest
+from .models import (
+    Product,
+    Category,
+    CurrencyRates,
+    Company,
+    ProductViews,
+    SourcingRequest,
+    QuotationForm,
+)
 from apps.profiles.models import ContactPerson
 from rest_framework.response import Response
 from django.db import transaction, IntegrityError
@@ -386,12 +396,7 @@ def get_currency_rates(request):
 def get_all_products(request):
     serializer = ProductReturnSerializer(data=Product.objects.all(), many=True)
     serializer.is_valid()
-    return Response(
-        {
-            "all_products": serializer.data
-        },
-        status=status.HTTP_200_OK
-    )
+    return Response({"all_products": serializer.data}, status=status.HTTP_200_OK)
 
 
 class SourcingRequestListCreateView(generics.ListCreateAPIView):
@@ -419,3 +424,33 @@ class SourcingRequestDeleteView(generics.DestroyAPIView):
             return SourcingRequest.objects.all()
         else:
             return SourcingRequest.objects.filter(user=self.request.user)
+
+
+@api_view(["POST"])
+@transaction.atomic
+def create_quotation(request):
+    quotation_data = request.data
+    image_ids = []
+
+    if "images" in quotation_data:
+        for image in quotation_data.pop("images"):
+            image_data = {"image": image}
+            image_serializer = QuotationImageSerializer(data=image_data)
+            image_serializer.is_valid(raise_exception=True)
+            image_instance = image_serializer.save()
+            image_ids.append(image_instance.id)
+
+    quotation_data["images"] = image_ids
+
+    quotation_serializer = QuotationSerializer(data=quotation_data)
+    quotation_serializer.is_valid(raise_exception=True)
+    quotation_serializer.save()
+
+    return Response(quotation_serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET"])
+def get_all_quotations(request):
+    quotation_data = QuotationForm.objects.values()
+    serializer = QuotationSerializer(quotation_data, many=True)
+    return Response(serializer.data)

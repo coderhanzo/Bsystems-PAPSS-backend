@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "djcelery_email",
     "multiselectfield",
+    "django_measurement",
 ]
 
 LOCAL_APPS = [

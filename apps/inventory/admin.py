@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage, CurrencyRates, ProductViews, SourcingRequest
+from .models import Category, Product, ProductImage, CurrencyRates, ProductViews, SourcingRequest, QuotationForm
 
 
 # Register your models here.
@@ -13,3 +13,4 @@ admin.site.register(ProductImage)
 admin.site.register(CurrencyRates)
 admin.site.register(ProductViews)
 admin.site.register(SourcingRequest)
+admin.site.register(QuotationForm)

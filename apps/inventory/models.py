@@ -1,8 +1,12 @@
+import datetime
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 from autoslug import AutoSlugField
 from apps.profiles.models import Company
+from django_measurement.models import MeasurementField
+from measurement.measures import Weight, Volume
 from django_countries.fields import CountryField
 from django.utils.timezone import localdate, now
 from datetime import timedelta
@@ -237,7 +241,6 @@ add "max_choices" to limit the number of choices for the radio buttons
     product_cap = models.CharField(
         max_length=250, blank=True, null=True, verbose_name=_("Product Capacity")
     )
-    # unit = models.ForeignKey(SampleInformation, on_delete=models.CASCADE, blank=True, null=True)
     time_span = models.CharField(
         choices=TIME_SPAN,
         max_length=250,
@@ -251,10 +254,10 @@ add "max_choices" to limit the number of choices for the radio buttons
     order_quantity = models.CharField(
         max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
     )
-    order_unit = models.CharField(
-        choices=MEASURE_UNIT,
-        max_length=250,
+    order_unit = MeasurementField(
+        measurement=Volume,
         verbose_name=_("Measure"),
+        max_length=250,
         blank=True,
         null=True,
     )
@@ -370,7 +373,11 @@ class SourcingRequest(models.Model):
         verbose_name=_("Prodcut Name"), max_length=50, blank=True, null=True
     )
     category = models.OneToOneField(
-        Category, verbose_name=_("Product Category"), blank=True, null=True, on_delete=models.CASCADE
+        Category,
+        verbose_name=_("Product Category"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
     )
     quantity = models.TextField(
         verbose_name=_("Fill in Sourcing Requirements"),
@@ -392,14 +399,62 @@ class SourcingRequest(models.Model):
         blank=True,
         null=True,
     )
-    unit = models.CharField(
-        choices=MEASURE_UNIT,
-        max_length=50,
+    unit = MeasurementField(measurement=Volume)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.name) if self.name else ""
+
+
+def current_year():
+    return datetime.date.today().year
+
+
+class QuotationImage(models.Model):
+    def user_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return "user_{0}/{1}".format("main", filename)
+
+    image = models.FileField(upload_to=user_directory_path, blank=True, null=True)
+
+
+class QuotationForm(models.Model):
+    name = models.CharField(
+        verbose_name=_("Product Name"), max_length=250, blank=True, null=True
+    )
+    YEAR_CHOICES = [(r, r) for r in range(1984, current_year() + 1)]
+    year = models.IntegerField(
+        verbose_name=_("Production Year"),
+        validators=[MinValueValidator(2000), MaxValueValidator(current_year())],
+        choices=YEAR_CHOICES,
+        default=current_year,
+    )
+    specs = models.TextField(
+        verbose_name=_("Product Specifications"), max_length=250, blank=True, null=True
+    )
+    message = models.TextField(
+        verbose_name=_("Message To Buyer"), max_length=500, blank=True, null=True
+    )
+    price = models.DecimalField(
+        decimal_places=2,
+        default="0.00",
+        max_digits=20,
+        verbose_name=_("Price Offer"),
         blank=True,
         null=True,
-        verbose_name=_("Unit"),
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    unit = MeasurementField(measurement=Volume, verbose_name=_("Unit"))
+
+    def user_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+        return "user_{0}/{1}".format("main", filename)
+
+    quotation_image = models.FileField(
+        upload_to=user_directory_path,
+        blank=True,
+        null=True,
+        verbose_name="Upload pictures of product",
+    )
 
     def __str__(self):
         return str(self.name) if self.name else ""

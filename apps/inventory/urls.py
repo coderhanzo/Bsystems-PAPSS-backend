@@ -16,6 +16,8 @@ urlpatterns = [
     path("get-all-products/", views.get_all_products, name="get_all_products"),
     path("sourcing-requests/", views.SourcingRequestListCreateView.as_view(), name='sourcing-requests'),
     path("sourcing-requests/<int:pk>/", views.SourcingRequestDeleteView.as_view(), name='sourcing-request-delete'),
+    path("create-quotation/", views.create_quotation, name="create-quotation"),
+    path("get-quotation/", views.get_all_quotations, name="get-quotation"),
 
     # new path here for products filtered by company
     # new path here for products filtered by category
