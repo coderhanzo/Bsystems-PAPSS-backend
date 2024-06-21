@@ -4,6 +4,8 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django_countries.fields
 import multiselectfield.db.fields
+import django_measurement.models
+import measurement.measures.volume
 
 
 class Migration(migrations.Migration):
@@ -15,48 +17,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='product',
-            name='brand_name',
-            field=models.CharField(blank=True, max_length=250, null=True, verbose_name='Brand Name'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='cert',
-            field=models.CharField(blank=True, choices=[('BRC', 'BRC Standard'), ('COSMOS', 'COSMOS Organic and Natural'), ('CFC', 'Cruelty Free Certificate'), ('EnergyStar', 'Energy Star'), ('FairTradeCertificate', 'Fair Trade Certificate'), ('FCC', 'FCC Certificate'), ('FSC', 'FSC Certificate'), ('GOTS', 'GOTS Certificcate'), ('HACCP', 'HACCP'), ('HALAL', 'HALAL Certificate'), ('ISO9001', 'ISO 9001'), ('ISO14001', 'ISO 14001'), ('ISO22000', 'ISO 22000'), ('ISO_TS', 'ISO_TS 16949'), ('Kosher', 'Kosher'), ('Non-GMO', 'Non-GMO Certificate'), ('RoHS', 'RoHS Compliance'), ('Wrap', 'Wrap Certificate'), ('Other', 'Other')], max_length=250, null=True, verbose_name='Certification Name'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='cert_number',
-            field=models.IntegerField(default=0, verbose_name='Certification Number'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='date_valid',
-            field=models.DateField(blank=True, help_text='format: Y-m-d', null=True),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='issue_date',
-            field=models.DateField(blank=True, help_text='format: Y-m-d', null=True),
-        ),
-        migrations.AddField(
-            model_name='product',
             name='market_type',
             field=models.CharField(blank=True, choices=[('Domestic', 'Domestic'), ('International', 'International')], max_length=250, null=True, verbose_name='Trading Areas'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='order_quantity',
-            field=models.CharField(blank=True, max_length=250, null=True, verbose_name='Maximum Order Quantity'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='order_unit',
-            field=models.CharField(blank=True, choices=[('Kilogram', 'Kilogram'), ('Litre', 'Litre'), ('Pack', 'Pack'), ('Set', 'Set'), ('Ton', 'Ton')], max_length=250, null=True, verbose_name='Measure'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='organization',
-            field=models.CharField(blank=True, max_length=250, null=True),
         ),
         migrations.AddField(
             model_name='product',
@@ -65,23 +27,13 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='product',
-            name='product_cap',
-            field=models.CharField(blank=True, max_length=250, null=True, verbose_name='Product Capacity'),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='sample_price',
-            field=models.DecimalField(blank=True, decimal_places=2, default='0.00', max_digits=20, null=True, verbose_name='Sample Price'),
-        ),
-        migrations.AddField(
-            model_name='product',
             name='shipping',
             field=models.CharField(blank=True, choices=[('ESX', 'ESX'), ('FCA', 'FCA'), ('FAS', 'FAS'), ('FOB', 'FOB'), ('CFR/CIF', 'CFR/CIF'), ('DPU', 'DPU'), ('DPA', 'DPA'), ('DDP', 'DDP')], max_length=250, null=True, verbose_name='Shipping Information'),
         ),
         migrations.AddField(
             model_name='product',
-            name='time_span',
-            field=models.CharField(blank=True, choices=[('Weekly', 'Weekly'), ('Monthly', 'Monthly'), ('Quarterly', 'Quarterly'), ('Bi-Yearly', 'Bi-Yearly'), ('Yearly', 'Yearly')], max_length=250, null=True, verbose_name='Time Span'),
+            name='order_unit',
+            field=django_measurement.models.MeasurementField(blank=True, max_length=250, measurement=measurement.measures.volume.Volume, null=True, verbose_name='Measure'),
         ),
         migrations.CreateModel(
             name='SourcingRequest',

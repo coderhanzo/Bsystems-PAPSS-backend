@@ -248,9 +248,6 @@ add "max_choices" to limit the number of choices for the radio buttons
         blank=True,
         null=True,
     )
-    brand_name = models.CharField(
-        max_length=250, blank=True, null=True, verbose_name=_("Brand Name")
-    )
     order_quantity = models.CharField(
         max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
     )
@@ -399,7 +396,7 @@ class SourcingRequest(models.Model):
         blank=True,
         null=True,
     )
-    unit = MeasurementField(measurement=Volume)
+    unit = MeasurementField(measurement=Volume, default="l")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
