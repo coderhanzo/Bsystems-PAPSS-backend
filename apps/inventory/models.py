@@ -5,8 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from autoslug import AutoSlugField
 from apps.profiles.models import Company
-from django_measurement.models import MeasurementField
-from measurement.measures import Weight, Volume
 from django_countries.fields import CountryField
 from django.utils.timezone import localdate, now
 from datetime import timedelta
@@ -46,14 +44,6 @@ TIME_SPAN = (
     ("Quarterly", _("Quarterly")),
     ("Bi-Yearly", _("Bi-Yearly")),
     ("Yearly", _("Yearly")),
-)
-
-MEASURE_UNIT = (
-    ("Kilogram", _("Kilogram")),
-    ("Litre", _("Litre")),
-    ("Pack", _("Pack")),
-    ("Set", _("Set")),
-    ("Ton", _("Ton")),
 )
 
 SHIPPING_INFORMATION = (
@@ -254,13 +244,7 @@ add "max_choices" to limit the number of choices for the radio buttons
     order_quantity = models.CharField(
         max_length=250, verbose_name=_("Maximum Order Quantity"), blank=True, null=True
     )
-    order_unit = MeasurementField(
-        measurement=Volume,
-        verbose_name=_("Measure"),
-        max_length=250,
-        blank=True,
-        null=True,
-    )
+    order_unit = models.CharField(max_length=250, blank=True, null=True)
     sample_price = models.DecimalField(
         decimal_places=2,
         default="0.00",
@@ -370,7 +354,7 @@ class ProductViews(TimeStampedUUIDModel):
 
 class SourcingRequest(models.Model):
     name = models.CharField(
-        verbose_name=_("Prodcut Name"), max_length=50, blank=True, null=True
+        verbose_name=_("Product Name"), max_length=50, blank=True, null=True
     )
     category = models.OneToOneField(
         Category,
@@ -399,7 +383,7 @@ class SourcingRequest(models.Model):
         blank=True,
         null=True,
     )
-    unit = MeasurementField(measurement=Volume)
+    unit = models.CharField(max_length=250, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -443,7 +427,7 @@ class QuotationForm(models.Model):
         blank=True,
         null=True,
     )
-    unit = MeasurementField(measurement=Volume, verbose_name=_("Unit"))
+    unit = models.CharField(max_length=250, blank=True, null=True)
 
     def user_directory_path(instance, filename):
         # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
