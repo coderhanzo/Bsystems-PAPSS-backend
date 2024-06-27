@@ -98,12 +98,76 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     )
     brochure = Base64File(required=False)
 
+    # Payments
+    papss = serializers.SerializerMethodField()
+    peoples_pay = serializers.SerializerMethodField()
+    letter_of_credit = serializers.SerializerMethodField()
+    cash_against_document = serializers.SerializerMethodField()
+
+    # Shipping information
+    esx = serializers.SerializerMethodField()
+    fca = serializers.SerializerMethodField()
+    fas = serializers.SerializerMethodField()
+    fob = serializers.SerializerMethodField()
+    cfr_cif = serializers.SerializerMethodField()
+    dpu = serializers.SerializerMethodField()
+    dpa = serializers.SerializerMethodField()
+    ddp = serializers.SerializerMethodField()
+
+    # Trading areas
+    domestic = serializers.SerializerMethodField()
+    international = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = "__all__"
 
     def get_categories(self, obj):
         return [category.name for category in obj.categories.all()]
+
+    def get_papss(self, obj):
+        return "papss" in obj.payments
+
+    def get_peoples_pay(self, obj):
+        return "peoples_pay" in obj.payments
+
+    def get_letter_of_credit(self, obj):
+        return "letter_of_credit" in obj.payments
+
+    def get_cash_against_document(self, obj):
+        return "cash_against_document" in obj.payment
+
+    # Shipping information
+    def get_esx(self, obj):
+        return "ESX" in obj.shipping_information
+
+    def get_fca(self, obj):
+        return "FCA" in obj.shipping_information
+
+    def get_fas(self, obj):
+        return "FAS" in obj.shipping_information
+
+    def get_fob(self, obj):
+        return "FOB" in obj.shipping_information
+
+    def get_cfr_cif(self, obj):
+        return "CFR/CIF" in obj.shipping_information
+
+    def get_dpu(self, obj):
+        return "DPU" in obj.shipping_information
+
+    def get_dpa(self, obj):
+        return "DPA" in obj.shipping_information
+
+    def get_ddp(self, obj):
+        return "DDP" in obj.shipping_information
+
+    # Trading areas
+    def get_domestic(self, obj):
+        return "Domestic" in obj.trading_areas
+
+    def get_international(self, obj):
+        return "International" in obj.trading_areas
 
 
 class ProductImageSerializer(serializers.ModelSerializer):

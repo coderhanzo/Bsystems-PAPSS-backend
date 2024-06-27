@@ -16,58 +16,111 @@ import uuid
 
 # Create your models here.
 
-CERTIFICATE_TYPE = (
-    ("BRC", _("BRC Standard")),
-    ("COSMOS", _("COSMOS Organic and Natural")),
-    ("CFC", _("Cruelty Free Certificate")),
-    ("EnergyStar", _("Energy Star")),
-    ("FairTradeCertificate", _("Fair Trade Certificate")),
-    ("FCC", _("FCC Certificate")),
-    ("FSC", _("FSC Certificate")),
-    ("GOTS", _("GOTS Certificcate")),
-    ("HACCP", _("HACCP")),
-    ("HALAL", _("HALAL Certificate")),
-    ("ISO9001", _("ISO 9001")),
-    ("ISO14001", _("ISO 14001")),
-    ("ISO22000", _("ISO 22000")),
-    ("ISO_TS", _("ISO_TS 16949")),
-    ("Kosher", _("Kosher")),
-    ("Non-GMO", _("Non-GMO Certificate")),
-    ("RoHS", _("RoHS Compliance")),
-    ("Wrap", _("Wrap Certificate")),
-    ("Other", _("Other")),
-)
 
-TIME_SPAN = (
-    ("Weekly", _("Weekly")),
-    ("Monthly", _("Monthly")),
-    ("Quarterly", _("Quarterly")),
-    ("Bi-Yearly", _("Bi-Yearly")),
-    ("Yearly", _("Yearly")),
-)
+class CertificateType(models.Model):
+    BRC = "BRC"
+    COSMOS = "COSMOS"
+    CFC = "CFC"
+    EnergyStar = "EnergyStar"
+    FairTradeCertificate = "FairTradeCertificate"
+    FCC = "FCC"
+    FSC = "FSC"
+    GOTS = "GOTS"
+    HACCP = "HACCP"
+    HALAL = "HALAL"
+    ISO9001 = "ISO9001"
+    ISO14001 = "ISO14001"
+    ISO22000 = "ISO22000"
+    ISO_TS = "ISO_TS"
+    Kosher = "Kosher"
+    Non_GMO = "Non_GMO"
+    RoHS = "RoHS"
+    Wrap = "Wrap"
+    Other = "Other"
 
-SHIPPING_INFORMATION = (
-    ("ESX", _("ESX")),
-    ("FCA", _("FCA")),
-    ("FAS", _("FAS")),
-    ("FOB", _("FOB")),
-    ("CFR/CIF", _("CFR/CIF")),
-    ("DPU", _("DPU")),
-    ("DPA", _("DPA")),
-    ("DDP", _("DDP")),
-)
+    CERTIFICATE_TYPE_CHOICES = [
+        ("BRC", _("BRC Standard")),
+        ("COSMOS", _("COSMOS Organic and Natural")),
+        ("CFC", _("Cruelty Free Certificate")),
+        ("EnergyStar", _("Energy Star")),
+        ("FairTradeCertificate", _("Fair Trade Certificate")),
+        ("FCC", _("FCC Certificate")),
+        ("FSC", _("FSC Certificate")),
+        ("GOTS", _("GOTS Certificcate")),
+        ("HACCP", _("HACCP")),
+        ("HALAL", _("HALAL Certificate")),
+        ("ISO9001", _("ISO 9001")),
+        ("ISO14001", _("ISO 14001")),
+        ("ISO22000", _("ISO 22000")),
+        ("ISO_TS", _("ISO_TS 16949")),
+        ("Kosher", _("Kosher")),
+        ("Non-GMO", _("Non-GMO Certificate")),
+        ("RoHS", _("RoHS Compliance")),
+        ("Wrap", _("Wrap Certificate")),
+        ("Other", _("Other")),
+    ]
 
-TRADING_AREAS = (
-    ("Domestic", _("Domestic")),
-    ("International", _("International")),
-)
 
-PAYMENT_METHODS = (
-    ("papss", _("PAPSS")),
-    ("peoples_pay", _("Peoples Pay")),
-    ("letter_of_credit", _("Letter of Credit")),
-    ("cash_against_document", _("Cash Against Document")),
-)
+class TimeSpan(models.Model):
+    WEEKLY = "Weekly"
+    MONTHLY = "Monthly"
+    QUARTERLY = "Quarterly"
+    BI_YEARLY = "Bi-Yearly"
+    YEARLY = "Yearly"
+
+    TIME_SPAN_CHOICES = [
+        ("Weekly", _("Weekly")),
+        ("Monthly", _("Monthly")),
+        ("Quarterly", _("Quarterly")),
+        ("Bi-Yearly", _("Bi-Yearly")),
+        ("Yearly", _("Yearly")),
+    ]
+
+
+class ShippingInformation(models.Model):
+    ESX = "ESX"
+    FCA = "FCA"
+    FAS = "FAS"
+    FOB = "FOB"
+    CFR_CIF = "CFR/CIF"
+    DPU = "DPU"
+    DPA = "DPA"
+    DDP = "DDP"
+
+    SHIPPING_INFORMATION_CHOICES = [
+        ("ESX", _("ESX")),
+        ("FCA", _("FCA")),
+        ("FAS", _("FAS")),
+        ("FOB", _("FOB")),
+        ("CFR/CIF", _("CFR/CIF")),
+        ("DPU", _("DPU")),
+        ("DPA", _("DPA")),
+        ("DDP", _("DDP")),
+    ]
+
+
+class TradingAreas(models.Model):
+    DOMESTIC = "Domestic"
+    INTERNATIONAL = "International"
+
+    TRADING_AREAS_CHOICES = [
+        (DOMESTIC, _("Domestic")),
+        (INTERNATIONAL, _("International")),
+    ]
+
+
+class PAYMENTMETHODS(models.Model):
+    PAPSS = "papss"
+    PEOPLESPAY = "peoples_pay"
+    LETTEROFCREDIT = "letter_of_credit"
+    CASHAGAINSTDOCUMENT = "cash_against_document"
+
+    PAYMENT_METHODS_CHOICES = [
+        (PAPSS, _("PAPSS")),
+        (PEOPLESPAY, _("Peoples Pay")),
+        (LETTEROFCREDIT, _("Letter of Credit")),
+        (CASHAGAINSTDOCUMENT, _("Cash Against Document")),
+    ]
 
 
 class TimeStampedUUIDModel(models.Model):
@@ -217,8 +270,8 @@ class Product(models.Model):
 All fields with MultiSelectField will be saved as a comma separated string,
 add "max_choices" to limit the number of choices for the radio buttons
 """
-    cert = models.CharField(
-        choices=CERTIFICATE_TYPE,
+    cert = MultiSelectField(
+        choices=CertificateType.CERTIFICATE_TYPE_CHOICES,
         blank=True,
         null=True,
         max_length=250,
@@ -232,7 +285,7 @@ add "max_choices" to limit the number of choices for the radio buttons
         max_length=250, blank=True, null=True, verbose_name=_("Product Capacity")
     )
     time_span = models.CharField(
-        choices=TIME_SPAN,
+        choices=TimeSpan.TIME_SPAN_CHOICES,
         max_length=250,
         verbose_name=_("Time Span"),
         blank=True,
@@ -259,22 +312,22 @@ add "max_choices" to limit the number of choices for the radio buttons
         null=True,
         verbose_name=_("Brand Name"),
     )
-    paymentS = MultiSelectField(
-        choices=PAYMENT_METHODS,
+    payments = MultiSelectField(
+        choices=PAYMENTMETHODS.PAYMENT_METHODS_CHOICES,
         max_length=250,
         verbose_name=_("Payment Methods"),
         blank=True,
         null=True,
     )
-    market_type = models.CharField(
-        choices=TRADING_AREAS,
+    market_type = MultiSelectField(
+        choices=TradingAreas.TRADING_AREAS_CHOICES,
         max_length=250,
         blank=True,
         null=True,
         verbose_name=_("Trading Areas"),
     )
-    shipping = models.CharField(
-        choices=SHIPPING_INFORMATION,
+    shipping = MultiSelectField(
+        choices=ShippingInformation.SHIPPING_INFORMATION_CHOICES,
         max_length=250,
         blank=True,
         null=True,
