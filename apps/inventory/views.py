@@ -35,6 +35,7 @@ from datetime import timedelta
 from django.db.models import Count
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 
@@ -427,6 +428,7 @@ class SourcingRequestDeleteView(generics.DestroyAPIView):
 
 
 @api_view(["POST"])
+@permission_classes([AllowAny])
 @transaction.atomic
 def create_quotation(request):
     quotation_data = request.data
