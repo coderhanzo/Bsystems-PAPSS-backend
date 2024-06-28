@@ -400,9 +400,10 @@ def get_all_products(request):
     return Response({"all_products": serializer.data}, status=status.HTTP_200_OK)
 
 
+
 class SourcingRequestListCreateView(generics.ListCreateAPIView):
     serializer_class = SourcingRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         queryset = SourcingRequest.objects.all()
@@ -415,10 +416,11 @@ class SourcingRequestListCreateView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
+
 class SourcingRequestDeleteView(generics.DestroyAPIView):
     queryset = SourcingRequest.objects.all()
     serializer_class = SourcingRequestSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         if self.request.user.is_staff:
